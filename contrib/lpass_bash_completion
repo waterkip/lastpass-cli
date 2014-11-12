@@ -1,0 +1,52 @@
+__lpass_complete_name()
+{
+    local matches
+
+    # matches on full path
+    matches=$(lpass ls | grep "^$cur" | awk '{print $1}')
+    # matches on leaves
+    matches+=$(lpass ls | grep "/$cur" | sed -e "s/ \[id.*//g" | \
+               awk -F '/' '{print $NF}')
+
+    local IFS=$'\n'
+    COMPREPLY=($(compgen -W "$matches" "$cur"))
+    COMPREPLY=($(printf "%q\n" "${COMPREPLY[@]}"))
+}
+
+__lpass_complete_group()
+{
+    local matches
+    matches=$(lpass ls | egrep "^$cur.*/" | awk -F '/' '{print $1}')
+
+    local IFS=$'\n'
+    COMPREPLY=($(compgen -W "$matches" "$cur"))
+    COMPREPLY=($(printf "%q\n" "${COMPREPLY[@]}"))
+}
+
+_lpass()
+{
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local cmd="${COMP_WORDS[1]}"
+    local all_cmds="
+        login logout show ls edit generate duplicate rm sync export
+    "
+
+    if [[ $COMP_CWORD -eq 1 ]]; then
+        COMPREPLY=($(compgen -W "$all_cmds" $cur))
+        return
+    fi
+
+    COMPREPLY=()
+    case "$cmd" in
+        show|rm|edit|duplicate|generate)
+            __lpass_complete_name
+            ;;
+        ls)
+            __lpass_complete_group
+            ;;
+        *)
+            ;;
+    esac
+}
+
+complete -o default -F _lpass lpass
