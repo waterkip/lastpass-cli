@@ -100,9 +100,9 @@ static char *attachment_filename(struct account *account,
 	_cleanup_free_ unsigned char *key_bin = NULL;
 
 	if (!attach->filename ||
-	    !account->attachkey ||
-	    strlen(account->attachkey) != KDF_HASH_LEN * 2 ||
-	    hex_to_bytes(account->attachkey, &key_bin)) {
+		!account->attachkey ||
+		strlen(account->attachkey) != KDF_HASH_LEN * 2 ||
+		hex_to_bytes(account->attachkey, &key_bin)) {
 		return xstrdup("unknown");
 	}
 
@@ -120,9 +120,9 @@ static bool attachment_is_binary(unsigned char *data, size_t len)
 }
 
 static void show_attachment(const struct session *session,
-			    struct account *account,
-			    struct attach *attach,
-			    bool quiet)
+				struct account *account,
+				struct attach *attach,
+				bool quiet)
 {
 	_cleanup_free_ unsigned char *key_bin = NULL;
 	_cleanup_free_ char *result = NULL;
@@ -158,8 +158,8 @@ static void show_attachment(const struct session *session,
 
 	if (attachment_is_binary(bytes, len) && !quiet) {
 		opt = ask_options("yns", 's',
-			    "\"%s\" is a binary file, print it anyway (or save)? ",
-			    filename);
+				"\"%s\" is a binary file, print it anyway (or save)? ",
+				filename);
 		switch (opt) {
 		case 'n':
 			return;
@@ -213,8 +213,8 @@ static void print_field(char *field_format, struct account *account,
 }
 
 static void print_attachment(char *field_format,
-			     struct account *account,
-			     struct attach *attach)
+				 struct account *account,
+				 struct attach *attach)
 {
 	_cleanup_free_ char *attach_id = NULL;
 	_cleanup_free_ char *filename = NULL;
@@ -226,7 +226,7 @@ static void print_attachment(char *field_format,
 }
 
 static struct attach *find_attachment(struct account *account,
-				      const char *attach_id)
+						const char *attach_id)
 {
 	struct attach *attach = NULL;
 

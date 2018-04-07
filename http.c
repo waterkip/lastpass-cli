@@ -164,7 +164,7 @@ static CURLcode pin_keys(CURL *curl, void *sslctx, void *parm)
 	UNUSED(curl);
 	UNUSED(parm);
 	SSL_CTX_set_verify((SSL_CTX *)sslctx, SSL_VERIFY_PEER,
-			   verify_callback);
+				verify_callback);
 	return CURLE_OK;
 }
 #endif
@@ -260,8 +260,8 @@ char *http_post_lastpass_v_noexit(const char *server, const char *page, const st
 
 	len = 0;
 	for (separator = '=', param = *argv;
-	     param;
-	     separator = (separator == '=') ? '&' : '=', param = *(++argv)) {
+		 param;
+		 separator = (separator == '=') ? '&' : '=', param = *(++argv)) {
 		encoded_param = curl_easy_escape(curl, param, 0);
 		if (!encoded_param)
 			die("Could not escape %s with curl", param);
@@ -334,7 +334,7 @@ char *http_post_lastpass_v(const char *server, const char *page, const struct se
 	long http_code;
 
 	result = http_post_lastpass_v_noexit(server, page, session, final_len,
-					     argv, &ret, &http_code);
+						 argv, &ret, &http_code);
 
 	if (ret != CURLE_OK && ret != CURLE_ABORTED_BY_CALLBACK)
 		die("%s.", curl_easy_strerror(ret));

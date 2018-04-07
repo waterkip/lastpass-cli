@@ -134,8 +134,8 @@ int cmd_edit(int argc, char **argv)
 
 	if (editable->share && editable->share->readonly)
 		die("%s is a readonly shared entry from %s. It cannot be edited.",
-		    editable->fullname, editable->share->name);
+			editable->fullname, editable->share->name);
 
 	return edit_account(session, blob, sync, editable, choice, field,
-			    non_interactive, key);
+				non_interactive, key);
 }

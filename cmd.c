@@ -133,18 +133,18 @@ static int cmp_substr(const char *haystack, const char *needle)
  * multiple searches of the potential match set.
  */
 static void search_accounts(struct list_head *accounts,
-			    const void *needle,
-			    int (*cmp)(const char *haystack, const char *needle),
-			    int fields,
-			    struct list_head *ret_list)
+				const void *needle,
+				int (*cmp)(const char *haystack, const char *needle),
+				int fields,
+				struct list_head *ret_list)
 {
 	struct account *account, *tmp;
 	list_for_each_entry_safe(account, tmp, accounts, match_list) {
 		if (((fields & ACCOUNT_ID) && cmp(account->id, needle) == 0) ||
-		    ((fields & ACCOUNT_NAME) && cmp(account->name, needle) == 0) ||
-		    ((fields & ACCOUNT_FULLNAME) && cmp(account->fullname, needle) == 0) ||
-		    ((fields & ACCOUNT_URL) && cmp(account->url, needle) == 0) ||
-		    ((fields & ACCOUNT_USERNAME) && cmp(account->username, needle) == 0)) {
+			((fields & ACCOUNT_NAME) && cmp(account->name, needle) == 0) ||
+			((fields & ACCOUNT_FULLNAME) && cmp(account->fullname, needle) == 0) ||
+			((fields & ACCOUNT_URL) && cmp(account->url, needle) == 0) ||
+			((fields & ACCOUNT_USERNAME) && cmp(account->username, needle) == 0)) {
 			list_del(&account->match_list);
 			list_add_tail(&account->match_list, ret_list);
 		}
@@ -176,7 +176,7 @@ void find_matching_regex(struct list_head *accounts, const char *pattern,
  * @fields - which fields to search on
  */
 void find_matching_substr(struct list_head *accounts, const char *pattern,
-			  int fields, struct list_head *ret_list)
+				int fields, struct list_head *ret_list)
 {
 	search_accounts(accounts, pattern, cmp_substr, fields, ret_list);
 }
@@ -189,7 +189,7 @@ void find_matching_substr(struct list_head *accounts, const char *pattern,
  * In the case of an id match, we return only the matching id entry.
  */
 void find_matching_accounts(struct list_head *accounts, const char *name,
-			    struct list_head *ret_list)
+				struct list_head *ret_list)
 {
 	/* look for exact id match */
 	struct account *account;

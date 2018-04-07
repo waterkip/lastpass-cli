@@ -46,10 +46,10 @@
 #include <string.h>
 
 struct multifactor_type {
-    const char *name;
-    const char *error_str;
-    const char *error_failure_str;
-    const char *post_var;
+	const char *name;
+	const char *error_str;
+	const char *error_failure_str;
+	const char *post_var;
 };
 static struct multifactor_type multifactor_types[] = {
 	{
@@ -156,7 +156,7 @@ static bool error_message(char **message, struct session **session, const char *
 }
 
 static bool ordinary_login(const char *login_server, const unsigned char key[KDF_HASH_LEN], char **args, char **cause, char **message, char **reply, struct session **session,
-			   char **ret_login_server)
+				char **ret_login_server)
 {
 	char *server;
 
@@ -343,7 +343,7 @@ struct session *lastpass_login(const char *username, const char hash[KDF_HEX_LEN
 	}
 
 	if (cause && !strcmp(cause, "outofbandrequired") &&
-	    oob_login(login_server, key, args, error_message, &reply, &otp_name, &session)) {
+		oob_login(login_server, key, args, error_message, &reply, &otp_name, &session)) {
 		if (trust)
 			http_post_lastpass("trust.php", session, NULL, "token", session->token, "uuid", trusted_id, "trustlabel", trusted_label, NULL);
 		return session;

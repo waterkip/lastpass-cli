@@ -245,7 +245,7 @@ struct parsed_name_value
  * notes text here
  */
 static void parse_account_file(FILE *input, enum note_type note_type,
-			       struct list_head *list_head)
+					struct list_head *list_head)
 {
 	_cleanup_free_ char *line = NULL;
 	ssize_t read;
@@ -280,8 +280,8 @@ static void parse_account_file(FILE *input, enum note_type note_type,
 		 * not a Proc-Type field.
 		 */
 		if (note_type != NOTE_TYPE_NONE &&
-		    !note_has_field(note_type, name) && current &&
-		    note_field_is_multiline(note_type, current->name)) {
+			!note_has_field(note_type, name) && current &&
+			note_field_is_multiline(note_type, current->name)) {
 			xstrappendf(&current->value, "\n%s", line);
 
 			free(name);
@@ -315,7 +315,7 @@ static void parse_account_file(FILE *input, enum note_type note_type,
 
 	if (len > MAX_NOTE_LEN) {
 		die("Maximum note length is %lu bytes (was %lu)",
-		    MAX_NOTE_LEN, len);
+			MAX_NOTE_LEN, len);
 	}
 
 	current = new0(struct parsed_name_value, 1);
@@ -326,7 +326,7 @@ static void parse_account_file(FILE *input, enum note_type note_type,
 }
 
 static void read_account_file(FILE *input, struct account *account,
-			      unsigned char key[KDF_HASH_LEN])
+					unsigned char key[KDF_HASH_LEN])
 {
 	LIST_HEAD(fields);
 	struct parsed_name_value *entry, *tmp;
@@ -335,7 +335,7 @@ static void read_account_file(FILE *input, struct account *account,
 
 	list_for_each_entry_safe(entry, tmp, &fields, list) {
 		assign_account_value(account, entry->name, entry->value,
-				     entry->lineno, key);
+					 entry->lineno, key);
 		free(entry->name);
 		free(entry->value);
 		list_del(&entry->list);
@@ -345,8 +345,8 @@ static void read_account_file(FILE *input, struct account *account,
 
 static
 struct field *add_default_field(struct account *account,
-			        const char *field_name,
-			        unsigned char key[KDF_HASH_LEN])
+					const char *field_name,
+					unsigned char key[KDF_HASH_LEN])
 {
 	struct field *editable_field = NULL;
 	bool found = false;
@@ -370,8 +370,8 @@ struct field *add_default_field(struct account *account,
 }
 
 static void add_default_fields(struct account *account,
-			       enum note_type note_type,
-			       unsigned char key[KDF_HASH_LEN])
+					enum note_type note_type,
+					unsigned char key[KDF_HASH_LEN])
 {
 	int i;
 	struct note_template *tmpl;
@@ -399,7 +399,7 @@ static void add_default_fields(struct account *account,
 }
 
 static int write_account_file(FILE *fp, struct account *account,
-			      unsigned char key[KDF_HASH_LEN])
+					unsigned char key[KDF_HASH_LEN])
 {
 	struct field *editable_field = NULL;
 	enum note_type note_type;
@@ -433,7 +433,7 @@ static int write_account_file(FILE *fp, struct account *account,
 		write_field("Reprompt", "Yes");
 	}
 
-	if (fprintf(fp, "Notes:    # Add notes below this line.\n%s", account->note) < 0)
+	if (fprintf(fp, "Notes:	# Add notes below this line.\n%s", account->note) < 0)
 		return -errno;
 
 	return 0;
@@ -603,21 +603,21 @@ int edit_account(struct session *session,
 }
 
 int edit_new_account(struct session *session,
-		     struct blob *blob,
-		     enum blobsync sync,
-		     const char *name,
-		     enum edit_choice choice,
-		     const char *field,
-		     bool non_interactive,
-		     bool is_app,
-		     enum note_type note_type,
-		     unsigned char key[KDF_HASH_LEN])
+			 struct blob *blob,
+			 enum blobsync sync,
+			 const char *name,
+			 enum edit_choice choice,
+			 const char *field,
+			 bool non_interactive,
+			 bool is_app,
+			 enum note_type note_type,
+			 unsigned char key[KDF_HASH_LEN])
 {
 	struct app *app;
 	struct account *account;
 
 	if (note_type != NOTE_TYPE_NONE &&
-	    choice != EDIT_NOTES && choice != EDIT_ANY) {
+		choice != EDIT_NOTES && choice != EDIT_ANY) {
 		die("Note type may only be used with secure notes");
 	}
 
@@ -646,10 +646,10 @@ int edit_new_account(struct session *session,
 	if (note_type != NOTE_TYPE_NONE) {
 		char *note_type_str = NULL;
 		xasprintf(&note_type_str, "NoteType:%s\n",
-			  notes_get_name(note_type));
+				notes_get_name(note_type));
 		account_set_note(account, note_type_str, key);
 	}
 
 	return edit_account(session, blob, sync, account, choice, field,
-			    non_interactive, key);
+				non_interactive, key);
 }

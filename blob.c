@@ -53,12 +53,12 @@
 #define be32toh(x) OSSwapBigToHostInt32(x)
 #else
 # if (defined(__unix__) || defined(unix)) && !defined(USG)
-#  include <sys/param.h>
+#	include <sys/param.h>
 # endif
 # if defined(BSD)
-#  include <sys/endian.h>
+#	include <sys/endian.h>
 # else
-#  include <endian.h>
+#	include <endian.h>
 # endif
 #endif
 
@@ -408,7 +408,7 @@ static struct account *account_parse(struct chunk *chunk, const unsigned char ke
 
 	/* use name as 'fullname' only if there's no assigned group */
 	if (strlen(parsed->group) &&
-	    (strlen(parsed->name) || account_is_group(parsed)))
+		(strlen(parsed->name) || account_is_group(parsed)))
 		xasprintf(&parsed->fullname, "%s/%s", parsed->group, parsed->name);
 	else
 		parsed->fullname = xstrdup(parsed->name);
@@ -531,7 +531,7 @@ static struct app *app_parse(struct chunk *chunk, const unsigned char key[KDF_HA
 	parsed->url = xstrdup("");
 
 	if (strlen(parsed->group) &&
-	    (strlen(parsed->name) || account_is_group(parsed)))
+		(strlen(parsed->name) || account_is_group(parsed)))
 		xasprintf(&parsed->fullname, "%s/%s", parsed->group, parsed->name);
 	else
 		parsed->fullname = xstrdup(parsed->name);
@@ -612,7 +612,7 @@ struct blob *blob_parse(const unsigned char *blob, size_t len, const unsigned ch
 				account->share = last_share;
 				char *tmp = account->fullname;
 				xasprintf(&account->fullname, "%s/%s",
-					  last_share->name, tmp);
+						last_share->name, tmp);
 				free(tmp);
 			}
 
@@ -706,8 +706,8 @@ void buffer_append_str(struct buffer *buf, char *str)
 {
 	/*
 	 * copy null terminator, but don't count in used len
-         * so that append of multiple strings will work
-         */
+		 * so that append of multiple strings will work
+		 */
 	buffer_append(buf, str, strlen(str) + 1);
 	buf->len--;
 }
@@ -1047,8 +1047,8 @@ void account_reencrypt(struct account *account, const unsigned char key[KDF_HASH
  * shared folder from fullname.
  */
 static void account_set_group_name(struct account *account,
-				   const char *groupname,
-				   unsigned const char key[KDF_HASH_LEN])
+					const char *groupname,
+					unsigned const char key[KDF_HASH_LEN])
 {
 	char *slash = strrchr(groupname, '/');
 	if (!slash) {
@@ -1077,14 +1077,14 @@ void account_set_fullname(struct account *account, char *fullname, unsigned cons
 
 struct share *find_unique_share(struct blob *blob, const char *name)
 {
-       struct share *share;
+		struct share *share;
 
-       list_for_each_entry(share, &blob->share_head, list) {
-               if (!strcasecmp(share->name, name)) {
-                       return share;
-               }
-       }
-       return NULL;
+		list_for_each_entry(share, &blob->share_head, list) {
+				if (!strcasecmp(share->name, name)) {
+						return share;
+				}
+		}
+		return NULL;
 }
 
 /*
@@ -1097,7 +1097,7 @@ struct share *find_unique_share(struct blob *blob, const char *name)
  * same folder is not available.
  */
 void account_assign_share(struct blob *blob, struct account *account,
-			  unsigned const char key[KDF_HASH_LEN])
+				unsigned const char key[KDF_HASH_LEN])
 {
 	struct share *share, *old_share;
 	_cleanup_free_ char *shared_name = NULL;
@@ -1194,8 +1194,8 @@ struct account *notes_expand(struct account *acc)
 		 * not a Proc-Type field.
 		 */
 		if (note_type != NOTE_TYPE_NONE &&
-		    !note_has_field(note_type, name) && field &&
-		    note_field_is_multiline(note_type, field->name)) {
+			!note_has_field(note_type, name) && field &&
+			note_field_is_multiline(note_type, field->name)) {
 			xstrappendf(&field->value, "\n%s", line);
 			goto skip;
 		}

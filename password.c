@@ -97,7 +97,7 @@ static char *password_prompt_askpass(const char *askpass, const char *prompt, co
 		die("Unable to execute askpass %s", askpass);
 	} else if (WEXITSTATUS(status)) {
 		die("There was an unspecified problem with askpass (%d)",
-		    WEXITSTATUS(status));
+			WEXITSTATUS(status));
 	}
 	return password;
 }

@@ -34,20 +34,20 @@
  * See LICENSE.OpenSSL for more details regarding this exception.
  *
  * reallocarray is:
- *     Copyright (c) 2008 Otto Moerbeek <otto@drijf.net>.
+ *	 Copyright (c) 2008 Otto Moerbeek <otto@drijf.net>.
  * strlcpy and strlcat are:
- *     Copyright (c) 1998 Todd C. Miller <Todd.Miller@courtesan.com>.
+ *	 Copyright (c) 1998 Todd C. Miller <Todd.Miller@courtesan.com>.
  * For reallocarray, strlcpy, and strlcat:
- *     Permission to use, copy, modify, and distribute this software for any
- *     purpose with or without fee is hereby granted, provided that the above
- *     copyright notice and this permission notice appear in all copies.
- *     THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- *     WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- *     MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- *     ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- *     WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- *     ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- *     OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ *	 Permission to use, copy, modify, and distribute this software for any
+ *	 purpose with or without fee is hereby granted, provided that the above
+ *	 copyright notice and this permission notice appear in all copies.
+ *	 THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ *	 WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ *	 MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ *	 ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ *	 WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ *	 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ *	 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 #include "util.h"
 #include "process.h"
@@ -135,7 +135,7 @@ char ask_options(char *options, char def, const char *prompt, ...)
 		terminal_fprintf(stderr, TERMINAL_RESET);
 		va_end(params);
 		terminal_fprintf(stderr, " [");
-	        for (i = 0; i < strlen(options); i++) {
+			for (i = 0; i < strlen(options); i++) {
 			if (options[i] == def) {
 				terminal_fprintf(stderr,TERMINAL_BOLD "%c" TERMINAL_RESET, toupper(options[i]));
 			} else {
@@ -203,7 +203,7 @@ void *reallocarray(void *optr, size_t nmemb, size_t size)
 		return NULL;
 	}
 	if ((nmemb >= MUL_NO_OVERFLOW || size >= MUL_NO_OVERFLOW) &&
-	    nmemb > 0 && SIZE_MAX / nmemb < size) {
+		nmemb > 0 && SIZE_MAX / nmemb < size) {
 		errno = ENOMEM;
 		return NULL;
 	}

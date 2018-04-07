@@ -66,7 +66,7 @@ struct share_command {
 	const char *name;
 	const char *usage;
 	int (*cmd)(struct share_command *cmd, int, char **,
-		   struct share_args *share);
+			struct share_args *share);
 };
 
 #define share_userls_usage "userls SHARE"
@@ -100,10 +100,10 @@ static int share_userls(struct share_command *cmd, int argc, char **argv,
 
 	if (lastpass_share_getinfo(args->session, args->share->id, &users))
 		die("Unable to access user list for share %s\n",
-		    args->sharename);
+			args->sharename);
 
 	terminal_printf(TERMINAL_FG_YELLOW TERMINAL_BOLD "%-40s %6s %6s %6s %6s %6s" TERMINAL_RESET "\n",
-	       "User", "RO", "Admin", "Hide", "OutEnt", "Accept");
+			"User", "RO", "Admin", "Hide", "OutEnt", "Accept");
 
 	list_for_each_entry(user, &users, list) {
 		if (user->is_group) {
@@ -171,8 +171,8 @@ static int share_useradd(struct share_command *cmd, int argc, char **argv,
 
 static
 struct share_user *get_user_from_share(struct session *session,
-				       struct share *share,
-				       const char *username)
+						struct share *share,
+						const char *username)
 {
 	struct share_user *tmp, *found = NULL;
 	LIST_HEAD(users);
@@ -188,7 +188,7 @@ struct share_user *get_user_from_share(struct session *session,
 	}
 	if (!found)
 		die("Unable to find user %s in the user list\n",
-		    username);
+			username);
 
 	return found;
 }
@@ -229,7 +229,7 @@ static int share_userdel(struct share_command *cmd, int argc, char **argv,
 }
 
 static void print_share_limits(struct blob *blob, struct share *share,
-			       struct share_limit *limit)
+					struct share_limit *limit)
 {
 	struct account *account;
 	struct share_limit_aid *aid;
@@ -267,7 +267,7 @@ static void print_share_limits(struct blob *blob, struct share *share,
 
 
 static int share_limit(struct share_command *cmd, int argc, char **argv,
-		       struct share_args *args)
+				struct share_args *args)
 {
 	struct share_user *found;
 	struct share_limit limit;
@@ -294,7 +294,7 @@ static int share_limit(struct share_command *cmd, int argc, char **argv,
 	 * order to avoid accidentally changing a blacklist to a whitelist
 	 */
 	changed_list_type = args->whitelist != limit.whitelist &&
-			    !list_empty(&limit.aid_list);
+				!list_empty(&limit.aid_list);
 
 	if (argc == 1 && !changed_list_type) {
 		/* nothing to do, just print current limits */
@@ -388,7 +388,7 @@ static int share_create(struct share_command *cmd, int argc, char **argv,
 }
 
 static int share_rm(struct share_command *cmd, int argc, char **argv,
-		    struct share_args *args)
+			struct share_args *args)
 {
 	if (argc != 0)
 		die_share_usage(cmd);

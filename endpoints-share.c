@@ -45,14 +45,14 @@
 #include <curl/curl.h>
 
 int lastpass_share_getinfo(const struct session *session, const char *shareid,
-			   struct list_head *users)
+				struct list_head *users)
 {
 	_cleanup_free_ char *reply = NULL;
 	size_t len;
 
 	reply = http_post_lastpass("share.php", session, &len,
-				   "sharejs", "1", "getinfo", "1",
-				   "id", shareid, "xmlr", "1", NULL);
+					"sharejs", "1", "getinfo", "1",
+					"id", shareid, "xmlr", "1", NULL);
 	if (!reply)
 		return -EPERM;
 
@@ -62,18 +62,18 @@ int lastpass_share_getinfo(const struct session *session, const char *shareid,
 
 static
 int lastpass_share_get_user_by_uid(const struct session *session,
-				   const char *uid,
-				   struct share_user *user)
+					const char *uid,
+					struct share_user *user)
 {
 	_cleanup_free_ char *reply = NULL;
 	size_t len;
 
 	/* get the pubkey for the user/group */
 	reply = http_post_lastpass("share.php", session, &len,
-				   "token", session->token,
-				   "getpubkey", "1",
-				   "uid", uid,
-				   "xmlr", "1", NULL);
+					"token", session->token,
+					"getpubkey", "1",
+					"uid", uid,
+					"xmlr", "1", NULL);
 
 	return xml_parse_share_getpubkey(reply, user);
 }
@@ -91,17 +91,17 @@ int lastpass_share_get_users_by_username(const struct session *session,
 
 	/* get the pubkey for the user/group */
 	reply = http_post_lastpass("share.php", session, &len,
-				   "token", session->token,
-				   "getpubkey", "1",
-				   "uid", uid_param,
-				   "xmlr", "1", NULL);
+					"token", session->token,
+					"getpubkey", "1",
+					"uid", uid_param,
+					"xmlr", "1", NULL);
 
 	return xml_parse_share_getpubkeys(reply, users);
 }
 
 int lastpass_share_user_add(const struct session *session,
-			    struct share *share,
-			    struct share_user *user)
+				struct share *share,
+				struct share_user *user)
 {
 	_cleanup_free_ char *reply = NULL;
 	_cleanup_free_ char *enc_share_name = NULL;
@@ -117,7 +117,7 @@ int lastpass_share_user_add(const struct session *session,
 	INIT_LIST_HEAD(&user_list);
 
 	ret = lastpass_share_get_users_by_username(session, user->username,
-						   &user_list);
+							&user_list);
 	if (ret)
 		die("Unable to lookup user %s (%d)\n", user->username, ret);
 
@@ -136,26 +136,26 @@ int lastpass_share_user_add(const struct session *session,
 					 enc_share_key, &enc_share_key_len);
 		if (ret)
 			die("Unable to encrypt sharing key with pubkey (%d)\n",
-			     ret);
+				 ret);
 
 		bytes_to_hex(enc_share_key, &hex_enc_share_key,
-			     enc_share_key_len);
+				 enc_share_key_len);
 
 		reply = http_post_lastpass("share.php", session, &len,
-					   "token", session->token,
-					   "id", share->id,
-					   "update", "1",
-					   "add", "1",
-					   "notify", "1",
-					   "uid0", share_user->uid,
-					   "cgid0", share_user->cgid ? share_user->cgid : "",
-					   "sharekey0", hex_enc_share_key,
-					   "sharename", enc_share_name,
-					   "name", share->name,
-					   "readonly", bool_str(user->read_only),
-					   "give", bool_str(!user->hide_passwords),
-					   "canadminister", bool_str(user->admin),
-					   "xmlr", "1", NULL);
+						"token", session->token,
+						"id", share->id,
+						"update", "1",
+						"add", "1",
+						"notify", "1",
+						"uid0", share_user->uid,
+						"cgid0", share_user->cgid ? share_user->cgid : "",
+						"sharekey0", hex_enc_share_key,
+						"sharename", enc_share_name,
+						"name", share->name,
+						"readonly", bool_str(user->read_only),
+						"give", bool_str(!user->hide_passwords),
+						"canadminister", bool_str(user->admin),
+						"xmlr", "1", NULL);
 		free(share_user);
 	}
 
@@ -166,22 +166,22 @@ int lastpass_share_user_add(const struct session *session,
 }
 
 int lastpass_share_user_mod(const struct session *session,
-			    struct share *share,
-			    struct share_user *user)
+				struct share *share,
+				struct share_user *user)
 {
 	_cleanup_free_ char *reply = NULL;
 	size_t len;
 
 	reply = http_post_lastpass("share.php", session, &len,
-				   "token", session->token,
-				   "id", share->id,
-				   "up", "1",
-				   "edituser", "1",
-				   "uid", user->uid,
-				   "readonly", user->read_only ? "on" : "",
-				   "give", !user->hide_passwords ? "on" : "",
-				   "canadminister", user->admin ? "on" : "",
-				   "xmlr", "1", NULL);
+					"token", session->token,
+					"id", share->id,
+					"up", "1",
+					"edituser", "1",
+					"uid", user->uid,
+					"readonly", user->read_only ? "on" : "",
+					"give", !user->hide_passwords ? "on" : "",
+					"canadminister", user->admin ? "on" : "",
+					"xmlr", "1", NULL);
 
 	if (!reply)
 		return -EPERM;
@@ -190,18 +190,18 @@ int lastpass_share_user_mod(const struct session *session,
 }
 
 int lastpass_share_user_del(const struct session *session, const char *shareid,
-			    struct share_user *user)
+				struct share_user *user)
 {
 	char *reply = NULL;
 	size_t len;
 
 	reply = http_post_lastpass("share.php", session, &len,
-				   "token", session->token,
-				   "id", shareid,
-				   "update", "1",
-				   "delete", "1",
-				   "uid", user->uid,
-				   "xmlr", "1", NULL);
+					"token", session->token,
+					"id", shareid,
+					"update", "1",
+					"delete", "1",
+					"uid", user->uid,
+					"xmlr", "1", NULL);
 
 	free(reply);
 	return 0;
@@ -270,15 +270,15 @@ int lastpass_share_create(const struct session *session, const char *sharename)
 	enc_share_name = encrypt_and_base64(sf_fullname, key);
 
 	reply = http_post_lastpass("share.php", session, &len,
-				   "token", session->token,
-				   "id", "0",
-				   "update", "1",
-				   "newusername", sf_username,
-				   "newhash", hash,
-				   "sharekey", hex_enc_share_key,
-				   "name", sf_fullname,
-				   "sharename", enc_share_name,
-				   "xmlr", "1", NULL);
+					"token", session->token,
+					"id", "0",
+					"update", "1",
+					"newusername", sf_username,
+					"newhash", hash,
+					"sharekey", hex_enc_share_key,
+					"name", sf_fullname,
+					"sharename", enc_share_name,
+					"xmlr", "1", NULL);
 
 	if (!reply)
 		return -EPERM;
@@ -292,10 +292,10 @@ int lastpass_share_delete(const struct session *session, struct share *share)
 	size_t len;
 
 	reply = http_post_lastpass("share.php", session, &len,
-				   "token", session->token,
-				   "id", share->id,
-				   "delete", "1",
-				   "xmlr", "1", NULL);
+					"token", session->token,
+					"id", share->id,
+					"delete", "1",
+					"xmlr", "1", NULL);
 	free(reply);
 	return 0;
 }
@@ -325,33 +325,33 @@ int lastpass_share_move(const struct session *session,
 	bytes_to_hex((unsigned char *) account->url, &url, strlen(account->url));
 
 	http_post_add_params(&params,
-			     "token", session->token,
-			     "cmd", "uploadaccounts",
-			     "aid0", account->id,
-			     "name0", account->name_encrypted,
-			     "grouping0", account->group_encrypted,
-			     "url0", url,
-			     "username0", account->username_encrypted,
-			     "password0", account->password_encrypted,
-			     "pwprotect0", account->pwprotect ? "on" : "off",
-			     "extra0", account->note_encrypted,
-			     "todelete", account->id, NULL);
+				 "token", session->token,
+				 "cmd", "uploadaccounts",
+				 "aid0", account->id,
+				 "name0", account->name_encrypted,
+				 "grouping0", account->group_encrypted,
+				 "url0", url,
+				 "username0", account->username_encrypted,
+				 "password0", account->password_encrypted,
+				 "pwprotect0", account->pwprotect ? "on" : "off",
+				 "extra0", account->note_encrypted,
+				 "todelete", account->id, NULL);
 
 	if (account->share) {
 		http_post_add_params(&params,
-				     "sharedfolderid", account->share->id,
-				     NULL);
+					 "sharedfolderid", account->share->id,
+					 NULL);
 	}
 
 	if (orig_folder) {
 		http_post_add_params(&params,
-				     "origsharedfolderid", orig_folder->id,
-				     NULL);
+					 "origsharedfolderid", orig_folder->id,
+					 NULL);
 	}
 
 	reply = http_post_lastpass_param_set("lastpass/api.php",
-					     session, NULL,
-					     &params);
+						 session, NULL,
+						 &params);
 
 	free(params.argv);
 
@@ -362,28 +362,28 @@ int lastpass_share_move(const struct session *session,
 }
 
 int lastpass_share_get_limits(const struct session *session,
-			      struct share *share,
-			      struct share_user *user,
-			      struct share_limit *ret_limit)
+					struct share *share,
+					struct share_user *user,
+					struct share_limit *ret_limit)
 {
 	_cleanup_free_ char *reply = NULL;
 	size_t len;
 
 	reply = http_post_lastpass("share.php", session, &len,
-				   "token", session->token,
-				   "id", share->id,
-				   "limit", "1",
-				   "uid", user->uid,
-				   "xmlr", "1", NULL);
+					"token", session->token,
+					"id", share->id,
+					"limit", "1",
+					"uid", user->uid,
+					"xmlr", "1", NULL);
 
 	xml_parse_share_get_limits(reply, ret_limit);
 	return 0;
 }
 
 int lastpass_share_set_limits(const struct session *session,
-			      struct share *share,
-			      struct share_user *user,
-			      struct share_limit *limit)
+					struct share *share,
+					struct share_user *user,
+					struct share_limit *limit)
 {
 	char *reply = NULL;
 	_cleanup_free_ char *aid_buf = NULL;
@@ -409,15 +409,15 @@ int lastpass_share_set_limits(const struct session *session,
 	snprintf(numaids_str, sizeof(numaids_str), "%d", numaids);
 
 	reply = http_post_lastpass("share.php", session, &len,
-				   "token", session->token,
-				   "id", share->id,
-				   "limit", "1",
-				   "edit", "1",
-				   "uid", user->uid,
-				   "numaids", numaids_str,
-				   "hidebydefault", bool_str(limit->whitelist),
-				   "aids", aid_buf,
-				   "xmlr", "1", NULL);
+					"token", session->token,
+					"id", share->id,
+					"limit", "1",
+					"edit", "1",
+					"uid", user->uid,
+					"numaids", numaids_str,
+					"hidebydefault", bool_str(limit->whitelist),
+					"aids", aid_buf,
+					"xmlr", "1", NULL);
 
 	free(reply);
 	return 0;

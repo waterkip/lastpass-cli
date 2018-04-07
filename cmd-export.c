@@ -95,7 +95,7 @@ static void print_csv_cell(const char *cell, bool is_last)
 }
 
 void print_csv_field(struct account *account, const char *field_name,
-		     bool is_last)
+			 bool is_last)
 {
 	_cleanup_free_ char *share_group = NULL;
 	char *groupname = account->group;
@@ -124,7 +124,7 @@ void print_csv_field(struct account *account, const char *field_name,
 	if (!strcmp(field_name, "grouping")) {
 		if (account->share) {
 			xasprintf(&share_group, "%s\\%s",
-				  account->share->name, account->group);
+					account->share->name, account->group);
 
 			/* trim trailing backslash if no subfolder */
 			if (!strlen(account->group))

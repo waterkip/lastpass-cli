@@ -270,7 +270,7 @@ xml_parse_share_user(xmlDoc *doc, xmlNode *item, struct share_user *user)
 
 static int
 xml_parse_share_key_entry(xmlDoc *doc, xmlNode *root,
-			  struct share_user *user, int idx)
+				struct share_user *user, int idx)
 {
 	char *tmp;
 
@@ -323,25 +323,25 @@ int xml_parse_share_getinfo(const char *buf, struct list_head *users)
 	/*
 	 * XML fields are as follows:
 	 * xmlresponse
-	 *   users
-	 *     item
-	 *       realname
-	 *       uid
-	 *       group
-	 *       username
-	 *       permissions
-	 *         readonly
-	 *         canadminister
-	 *         give
-	 *       outsideenterprise
-	 *       accepted
-	 *     item...
+	 *	users
+	 *	 item
+	 *		realname
+	 *		uid
+	 *		group
+	 *		username
+	 *		permissions
+	 *		 readonly
+	 *		 canadminister
+	 *		 give
+	 *		outsideenterprise
+	 *		accepted
+	 *	 item...
 	 */
 	xmlNode *root = xmlDocGetRootElement(doc);
 	if (!root ||
-	    xmlStrcmp(root->name, BAD_CAST "xmlresponse") ||
-	    !root->children ||
-	    xmlStrcmp(root->children->name, BAD_CAST "users")) {
+		xmlStrcmp(root->name, BAD_CAST "xmlresponse") ||
+		!root->children ||
+		xmlStrcmp(root->children->name, BAD_CAST "users")) {
 		ret = -EINVAL;
 		goto free_doc;
 	}
@@ -372,15 +372,15 @@ int xml_parse_share_getpubkeys(const char *buf, struct list_head *user_list)
 	/*
 	 * XML fields are as follows:
 	 * xmlresponse
-	 *   success
-	 *   pubkey0
-	 *   uid0
-	 *   username0
-	 *   cgid0 (if group)
+	 *	success
+	 *	pubkey0
+	 *	uid0
+	 *	username0
+	 *	cgid0 (if group)
 	 */
 	xmlNode *root = xmlDocGetRootElement(doc);
 	if (!root || xmlStrcmp(root->name, BAD_CAST "xmlresponse") ||
-	    !root->children) {
+		!root->children) {
 		ret = -EINVAL;
 		goto free_doc;
 	}
@@ -405,7 +405,7 @@ free_doc:
 
 static
 int xml_parse_su_key_entry(xmlDoc *doc, xmlNode *parent,
-			   struct pwchange_su_key *su_key, int idx)
+				struct pwchange_su_key *su_key, int idx)
 {
 	char *tmp;
 	_cleanup_free_ char *pubkey = NULL;
@@ -440,7 +440,7 @@ int xml_parse_su_key_entry(xmlDoc *doc, xmlNode *parent,
 
 static
 int xml_parse_pwchange_su_keys(xmlDoc *doc, xmlNode *parent,
-			       struct pwchange_info *info)
+					struct pwchange_info *info)
 {
 	for (int count = 0; ; count++) {
 		struct pwchange_su_key *su_key = new0(struct pwchange_su_key,1);
@@ -502,7 +502,7 @@ int xml_api_err(const char *buf)
 
 	xmlNode *root = xmlDocGetRootElement(doc);
 	if (!root || xmlStrcmp(root->name, BAD_CAST "lastpass") ||
-			       !root->children) {
+					!root->children) {
 		ret = -EINVAL;
 		goto free_doc;
 	}
@@ -533,7 +533,7 @@ int xml_parse_pwchange(const char *buf, struct pwchange_info *info)
 
 	xmlNode *root = xmlDocGetRootElement(doc);
 	if (!root || xmlStrcmp(root->name, BAD_CAST "lastpass") ||
-			       !root->children) {
+					!root->children) {
 		ret = -EINVAL;
 		goto free_doc;
 	}
@@ -628,14 +628,14 @@ int xml_parse_share_get_limits(const char *buf, struct share_limit *limit)
 
 	xmlNode *root = xmlDocGetRootElement(doc);
 	if (!root || xmlStrcmp(root->name, BAD_CAST "xmlresponse") ||
-	    !root->children) {
+		!root->children) {
 		ret = -EINVAL;
 		goto free_doc;
 	}
 
 	for (xmlNode *item = root->children; item; item = item->next) {
 		if (xml_parse_bool(doc, item, "hidebydefault",
-				   &limit->whitelist))
+					&limit->whitelist))
 			continue;
 
 		if (!xmlStrcmp(item->name, BAD_CAST "aids")) {

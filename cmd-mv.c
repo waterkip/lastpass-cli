@@ -100,7 +100,7 @@ int cmd_mv(int argc, char **argv)
 	account_assign_share(blob, account, key);
 	if (account->share && account->share->readonly) {
 		die("You do not have access to move %s into %s",
-		    account->name, account->share->name);
+			account->name, account->share->name);
 	}
 
 	if (old_share != account->share) {

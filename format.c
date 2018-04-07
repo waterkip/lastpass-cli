@@ -148,8 +148,8 @@ void format_account_item(struct buffer *buf, char fmt,
 }
 
 void format_field_item(struct buffer *buf, char fmt,
-		       char *field_name, char *field_value,
-		       bool add_slash)
+				char *field_name, char *field_value,
+				bool add_slash)
 {
 	if (fmt == 'n' && field_name) {
 		append_str(buf, field_name, add_slash);
@@ -159,8 +159,8 @@ void format_field_item(struct buffer *buf, char fmt,
 }
 
 void format_field(struct buffer *buf, const char *format_str,
-		  struct account *account,
-		  char *field_name, char *field_value)
+			struct account *account,
+			char *field_name, char *field_value)
 {
 	const char *p = format_str;
 	bool in_format = false;
@@ -218,7 +218,7 @@ void format_field(struct buffer *buf, const char *format_str,
 }
 
 void format_account(struct buffer *buf, const char *fmt_str,
-		    struct account *account)
+			struct account *account)
 {
 	format_field(buf, fmt_str, account, NULL, NULL);
 }

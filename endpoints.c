@@ -143,7 +143,7 @@ static char *stringify_fields(const struct list_head *field_head)
 }
 
 static void add_app_fields(const struct account *account,
-			   struct http_param_set *params)
+				struct http_param_set *params)
 {
 	int index = 0;
 	struct field *field;
@@ -156,10 +156,10 @@ static void add_app_fields(const struct account *account,
 		xasprintf(&value_name, "fieldvalue%d", index);
 
 		http_post_add_params(params,
-				     id_name, field->name,
-				     type_name, field->type,
-				     value_name, field->value_encrypted,
-				     NULL);
+					 id_name, field->name,
+					 type_name, field->type,
+					 value_name, field->value_encrypted,
+					 NULL);
 		index++;
 	}
 }
@@ -180,27 +180,27 @@ void lastpass_update_account(enum blobsync sync, unsigned const char key[KDF_HAS
 	++blob->version;
 
 	http_post_add_params(&params,
-			     "extjs", "1",
-			     "token", session->token,
-			     "method", "cli",
-			     "name", account->name_encrypted,
-			     "grouping", account->group_encrypted,
-			     "pwprotect", account->pwprotect ? "on" : "off",
-			     NULL);
+				 "extjs", "1",
+				 "token", session->token,
+				 "method", "cli",
+				 "name", account->name_encrypted,
+				 "grouping", account->group_encrypted,
+				 "pwprotect", account->pwprotect ? "on" : "off",
+				 NULL);
 
 	if (account->share) {
 		http_post_add_params(&params,
-				     "sharedfolderid", account->share->id,
-				     NULL);
+					 "sharedfolderid", account->share->id,
+					 NULL);
 	}
 	if (account->is_app) {
 		struct app *app = account_to_app(account);
 
 		http_post_add_params(&params,
-				     "ajax", "1",
-				     "cmd", "updatelpaa",
-				     "appname", app->appname,
-				     NULL);
+					 "ajax", "1",
+					 "cmd", "updatelpaa",
+					 "appname", app->appname,
+					 NULL);
 		add_app_fields(account, &params);
 		if (strcmp(account->id, "0"))
 			http_post_add_params(&params, "appaid", account->id, NULL);
@@ -209,18 +209,18 @@ void lastpass_update_account(enum blobsync sync, unsigned const char key[KDF_HAS
 		goto out_free_params;
 	}
 	http_post_add_params(&params,
-			     "aid", account->id,
-			     "url", url,
-			     "username", account->username_encrypted,
-			     "password", account->password_encrypted,
-			     "extra", account->note_encrypted,
-			     NULL);
+				 "aid", account->id,
+				 "url", url,
+				 "username", account->username_encrypted,
+				 "password", account->password_encrypted,
+				 "extra", account->note_encrypted,
+				 NULL);
 
 	if (strlen(fields)) {
 		http_post_add_params(&params,
-				     "save_all", "1",
-				     "data", fields,
-				     NULL);
+					 "save_all", "1",
+					 "data", fields,
+					 NULL);
 	}
 	upload_queue_enqueue(sync, key, session, "show_website.php", &params);
 
@@ -268,15 +268,15 @@ int lastpass_pwchange_start(const struct session *session, const char *username,
 	_cleanup_free_ char *reply = NULL;
 
 	reply = http_post_lastpass("lastpass/api.php", session, NULL,
-				   "cmd", "getacctschangepw",
-				   "username", username,
-				   "hash", hash,
-				   "changepw", "1",
-				   "changepw2", "1",
-				   "includersaprivatekeyenc", "1",
-				   "changeun", "",
-				   "resetrsakeys", "0",
-				   "includeendmarker", "1", NULL);
+					"cmd", "getacctschangepw",
+					"username", username,
+					"hash", hash,
+					"changepw", "1",
+					"changepw2", "1",
+					"includersaprivatekeyenc", "1",
+					"changeun", "",
+					"resetrsakeys", "0",
+					"includeendmarker", "1", NULL);
 	if (!reply)
 		return -ENOENT;
 
@@ -284,11 +284,11 @@ int lastpass_pwchange_start(const struct session *session, const char *username,
 }
 
 int lastpass_pwchange_complete(const struct session *session,
-			       const char *username,
-			       const char *enc_username,
-			       const char new_hash[KDF_HEX_LEN],
-			       int new_iterations,
-			       struct pwchange_info *info)
+					const char *username,
+					const char *enc_username,
+					const char new_hash[KDF_HEX_LEN],
+					int new_iterations,
+					struct pwchange_info *info)
 {
 	struct http_param_set params = {
 		.argv = NULL,
@@ -311,7 +311,7 @@ int lastpass_pwchange_complete(const struct session *session,
 	len = strlen(info->reencrypt_id) + 1;
 	list_for_each_entry(field, &info->fields, list) {
 		len += strlen(field->old_ctext) + strlen(field->new_ctext) +
-		       1 /* ':' */ + 1 /* '\n' */;
+				1 /* ':' */ + 1 /* '\n' */;
 	}
 	reencrypt_string = xcalloc(len + 1, 1);
 	strlcat(reencrypt_string, info->reencrypt_id, len);
@@ -344,21 +344,21 @@ int lastpass_pwchange_complete(const struct session *session,
 		snprintf(suuid_str, sizeof(suuid_str), "suuid%d", su_key_ind);
 		snprintf(sukey_str, sizeof(sukey_str), "sukey%d", su_key_ind);
 		http_post_add_params(&params,
-				     xstrdup(suuid_str), su_key->uid,
-				     xstrdup(sukey_str), su_key->new_enc_key,
-				     NULL);
+				xstrdup(suuid_str), su_key->uid,
+				xstrdup(sukey_str), su_key->new_enc_key,
+				NULL);
 		su_key_ind++;
 	}
 	sukeycnt_str = xultostr(su_key_ind);
 	http_post_add_params(&params, xstrdup("sukeycnt"), sukeycnt_str, NULL);
 
 	reply = http_post_lastpass_param_set("lastpass/api.php",
-					     session, NULL,
-					     &params);
+						 session, NULL,
+						 &params);
 
 	for (i=0; i < params.n_alloced && params.argv[i]; i++) {
 		if (starts_with(params.argv[i], "sukey") ||
-		    starts_with(params.argv[i], "suuid")) {
+			starts_with(params.argv[i], "suuid")) {
 			free(params.argv[i]);
 		}
 	}
@@ -376,7 +376,7 @@ int lastpass_pwchange_complete(const struct session *session,
  * Upload a set of accounts, used for import.
  */
 int lastpass_upload(const struct session *session,
-		    struct list_head *accounts)
+			struct list_head *accounts)
 {
 	_cleanup_free_ char *reply = NULL;
 	struct account *account;
@@ -392,9 +392,9 @@ int lastpass_upload(const struct session *session,
 		return 0;
 
 	http_post_add_params(&params,
-			     "token", session->token,
-			     "cmd", "uploadaccounts",
-			     NULL);
+				 "token", session->token,
+				 "cmd", "uploadaccounts",
+				 NULL);
 
 	index = 0;
 	list_for_each_entry(account, accounts, list) {
@@ -403,7 +403,7 @@ int lastpass_upload(const struct session *session,
 		char *fav_param, *extra_param;
 		char *url = NULL;
 		bytes_to_hex((unsigned char *) account->url, &url,
-			     strlen(account->url));
+				 strlen(account->url));
 
 		xasprintf(&name_param, "name%d", index);
 		xasprintf(&grouping_param, "grouping%d", index);
@@ -414,28 +414,28 @@ int lastpass_upload(const struct session *session,
 		xasprintf(&extra_param, "extra%d", index);
 
 		http_post_add_params(&params,
-				     name_param, account->name_encrypted,
-				     grouping_param, account->group_encrypted,
-				     url_param, url,
-				     username_param, account->username_encrypted,
-				     password_param, account->password_encrypted,
-				     fav_param, account->fav ? "1" : "0",
-				     extra_param, account->note_encrypted,
-				     NULL);
+					 name_param, account->name_encrypted,
+					 grouping_param, account->group_encrypted,
+					 url_param, url,
+					 username_param, account->username_encrypted,
+					 password_param, account->password_encrypted,
+					 fav_param, account->fav ? "1" : "0",
+					 extra_param, account->note_encrypted,
+					 NULL);
 		index++;
 	}
 
 	reply = http_post_lastpass_param_set("lastpass/api.php",
-					     session, NULL,
-					     &params);
+						 session, NULL,
+						 &params);
 
 	for (i=0; i < params.n_alloced && params.argv[i]; i++) {
 		if (starts_with(params.argv[i], "name") ||
-		    starts_with(params.argv[i], "grouping") ||
-		    starts_with(params.argv[i], "username") ||
-		    starts_with(params.argv[i], "password") ||
-		    starts_with(params.argv[i], "fav") ||
-		    starts_with(params.argv[i], "extra")) {
+			starts_with(params.argv[i], "grouping") ||
+			starts_with(params.argv[i], "username") ||
+			starts_with(params.argv[i], "password") ||
+			starts_with(params.argv[i], "fav") ||
+			starts_with(params.argv[i], "extra")) {
 			free(params.argv[i]);
 		}
 		else if (starts_with(params.argv[i], "url")) {
@@ -461,9 +461,9 @@ int lastpass_upload(const struct session *session,
  * in *result should be freed by the caller.
  */
 int lastpass_load_attachment(const struct session *session,
-			     const char *shareid,
-			     struct attach *attach,
-			     char **result)
+				 const char *shareid,
+				 struct attach *attach,
+				 char **result)
 {
 	char *reply = NULL;
 	char *p;
@@ -475,20 +475,15 @@ int lastpass_load_attachment(const struct session *session,
 		.n_alloced = 0
 	};
 
-	http_post_add_params(&params,
-			     "token", session->token,
-			     "getattach", attach->storagekey,
-			     NULL);
+	http_post_add_params(&params, "token", session->token,
+			"getattach", attach->storagekey, NULL);
 
 	if (shareid) {
-		http_post_add_params(&params,
-				     "sharedfolderid", shareid,
-				     NULL);
+		http_post_add_params(&params, "sharedfolderid", shareid, NULL);
 	}
 
 	reply = http_post_lastpass_param_set("getattach.php",
-					     session, NULL,
-					     &params);
+					session, NULL, &params);
 
 	free(params.argv);
 	if (!reply)

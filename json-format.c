@@ -10,7 +10,7 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.	See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along
@@ -56,7 +56,7 @@ static void print_json_quoted_string(const char *str)
 		case '\r': putchar('\\'); putchar('r'); break;
 		case '\t': putchar('\\'); putchar('t'); break;
 		case '\\': putchar('\\'); putchar('\\'); break;
-		case  '"': putchar('\\'); putchar('"'); break;
+		case	'"': putchar('\\'); putchar('"'); break;
 		default:
 			if ((*ptr) < ' ') {
 				printf("\\u%04x", *ptr);
@@ -97,7 +97,7 @@ void json_format_array(struct json_field *field, int level, bool is_last)
 		return;
 
 	last = list_last_entry_or_null(&field->children, struct json_field,
-				       siblings);
+						siblings);
 	indent(level);
 
 	if (field->name) {
@@ -122,7 +122,7 @@ void json_format_object(struct json_field *field, int level, bool is_last)
 		return;
 
 	last = list_last_entry_or_null(&field->children, struct json_field,
-				       siblings);
+						siblings);
 	indent(level);
 
 	if (field->name) {
@@ -157,7 +157,7 @@ void json_format(struct json_field *field, int level, bool is_last)
 
 static
 void json_add_string_field(struct json_field *object,
-			   const char *name, const char *value)
+				const char *name, const char *value)
 {
 	if (!value)
 		return;

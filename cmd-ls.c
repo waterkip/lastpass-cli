@@ -82,8 +82,8 @@ static void parse_path(char *path, struct list_head *components)
 }
 
 static void __insert_node(struct node *head,
-			  struct list_head *components,
-			  struct account *account)
+				struct list_head *components,
+				struct account *account)
 {
 	struct path_component *pc;
 	struct node *child, *tmp;
@@ -143,10 +143,10 @@ static void insert_node(struct node *head, const char *path, struct account *acc
 	/*
 	 * We are left with one of:
 	 *
-	 *     (none)/
-	 *     groupname/
-	 *     Shared-folder/
-	 *     Shared-folder/groupname/
+	 *	 (none)/
+	 *	 groupname/
+	 *	 Shared-folder/
+	 *	 Shared-folder/groupname/
 	 *
 	 * If there are embedded backslashes, these are treated as folder
 	 * names by parse_path().
@@ -190,7 +190,7 @@ static void print_node(struct node *head, char *fmt_str, int level)
 	list_for_each_entry(node, &head->children, list) {
 		if (node->name) {
 			for (int i = 0; i < level; ++i)
-				printf("    ");
+				printf("	");
 			if (node->account) {
 				struct buffer buf;
 
@@ -285,7 +285,7 @@ int cmd_ls(int argc, char **argv)
 
 	terminal_set_color_mode(cmode);
 	print_tree = cmode == COLOR_MODE_ALWAYS ||
-		     (cmode == COLOR_MODE_AUTO && isatty(fileno(stdout)));
+			 (cmode == COLOR_MODE_AUTO && isatty(fileno(stdout)));
 
 
 	init_all(sync, key, &session, &blob);
@@ -323,19 +323,19 @@ int cmd_ls(int argc, char **argv)
 		account_array[i++] = account;
 	}
 	qsort(account_array, num_accounts, sizeof(struct account *),
-	      compare_account);
+			compare_account);
 
 	if (!fmt_str) {
 		xasprintf(&fmt_str,
-			  TERMINAL_FG_CYAN "%s"
-			  TERMINAL_FG_GREEN TERMINAL_BOLD "%%a%c"
-			  TERMINAL_NO_BOLD
-			  " [id: %%ai]"
-			  "%s" TERMINAL_RESET,
-			  (long_listing) ?
-				((show_mtime) ?  "%am " : "%aU ") : "",
-			  (print_tree) ? 'n' : 'N',
-			  (long_listing) ? " [username: %au]" : "");
+				TERMINAL_FG_CYAN "%s"
+				TERMINAL_FG_GREEN TERMINAL_BOLD "%%a%c"
+				TERMINAL_NO_BOLD
+				" [id: %%ai]"
+				"%s" TERMINAL_RESET,
+				(long_listing) ?
+				((show_mtime) ?	"%am " : "%aU ") : "",
+				(print_tree) ? 'n' : 'N',
+				(long_listing) ? " [username: %au]" : "");
 	}
 
 	for (i=0; i < num_accounts; i++)
@@ -349,8 +349,8 @@ int cmd_ls(int argc, char **argv)
 			group_len = strlen(group);
 			sub += group_len;
 			if (group_len &&
-			    group[group_len - 1] != '/' &&
-			    sub[0] != '\0' && sub[0] != '/')
+				group[group_len - 1] != '/' &&
+				sub[0] != '\0' && sub[0] != '/')
 				continue;
 		}
 

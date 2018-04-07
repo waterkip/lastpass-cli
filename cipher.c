@@ -90,9 +90,9 @@ out:
 }
 
 int cipher_rsa_encrypt_bytes(const unsigned char *plaintext,
-			     size_t in_len,
-			     const struct public_key *public_key,
-			     unsigned char *out_crypttext, size_t *out_len)
+				 size_t in_len,
+				 const struct public_key *public_key,
+				 unsigned char *out_crypttext, size_t *out_len)
 {
 	EVP_PKEY *pubkey = NULL;
 	RSA *rsa = NULL;
@@ -119,8 +119,8 @@ int cipher_rsa_encrypt_bytes(const unsigned char *plaintext,
 		goto out;
 
 	ret = RSA_public_encrypt(in_len, plaintext,
-			         out_crypttext,
-			         rsa, RSA_PKCS1_OAEP_PADDING);
+					 out_crypttext,
+					 rsa, RSA_PKCS1_OAEP_PADDING);
 	if (ret < 0)
 		goto out;
 
@@ -135,8 +135,8 @@ out:
 }
 
 int cipher_rsa_encrypt(const char *plaintext,
-		       const struct public_key *public_key,
-		       unsigned char *out_crypttext, size_t *out_len)
+				const struct public_key *public_key,
+				unsigned char *out_crypttext, size_t *out_len)
 {
 	return cipher_rsa_encrypt_bytes((unsigned char *) plaintext,
 					strlen(plaintext),
@@ -226,8 +226,8 @@ error:
 }
 
 size_t cipher_aes_encrypt(const char *plaintext,
-			  const unsigned char key[KDF_HASH_LEN],
-			  unsigned char **out)
+				const unsigned char key[KDF_HASH_LEN],
+				unsigned char **out)
 {
 	unsigned char *ciphertext;
 	unsigned char *tmp;
@@ -492,7 +492,7 @@ char *cipher_encrypt_private_key(struct private_key *private_key,
 	bytes_to_hex(private_key->key, &key_hex_dst, private_key->len);
 
 	memcpy(key_ptext + strlen(LP_PKEY_PREFIX) + hex_len,
-	       LP_PKEY_SUFFIX, strlen(LP_PKEY_SUFFIX));
+			LP_PKEY_SUFFIX, strlen(LP_PKEY_SUFFIX));
 
 	ctext_len = cipher_aes_encrypt_bytes(key_ptext, len, key, key, &ctext);
 	bytes_to_hex(ctext, &ctext_hex, ctext_len);

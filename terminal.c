@@ -49,7 +49,7 @@ static void filter_ansi(FILE *file, const char *fmt, va_list args)
 	size_t len, i, j;
 
 	if (color_mode == COLOR_MODE_ALWAYS ||
-	    (color_mode == COLOR_MODE_AUTO && isatty(fileno(file)))) {
+		(color_mode == COLOR_MODE_AUTO && isatty(fileno(file)))) {
 		vfprintf(file, fmt, args);
 		return;
 	}

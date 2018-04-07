@@ -143,7 +143,7 @@ static enum csv_token csv_next_token(FILE *fp, char **retp)
 	rptr = result.bytes;
 	/* trim cr/nl, but not spaces (they may be significant) */
 	while (rptr[strlen(rptr)-1] == '\r' ||
-	       rptr[strlen(rptr)-1] == '\n') {
+			rptr[strlen(rptr)-1] == '\n') {
 		rptr[strlen(rptr)-1] = '\0';
 	}
 	*retp = rptr;
@@ -206,7 +206,7 @@ static struct account *new_import_account(unsigned char key[KDF_HASH_LEN])
 }
 
 static int csv_parse_accounts(FILE *fp, struct list_head *account_list,
-			      unsigned char key[KDF_HASH_LEN])
+					unsigned char key[KDF_HASH_LEN])
 {
 	struct list_head items;
 	struct csv_record *record, *tmp_record, *first;
@@ -215,12 +215,12 @@ static int csv_parse_accounts(FILE *fp, struct list_head *account_list,
 	int num_accounts = 0;
 
 	int url_index = -1,
-	    username_index = -1,
-	    password_index = -1,
-	    extra_index = -1,
-	    name_index = -1,
-	    grouping_index = -1,
-	    fav_index = -1;
+		username_index = -1,
+		password_index = -1,
+		extra_index = -1,
+		name_index = -1,
+		grouping_index = -1,
+		fav_index = -1;
 
 	INIT_LIST_HEAD(&items);
 	csv_parse(fp, &items);
@@ -261,9 +261,9 @@ static int csv_parse_accounts(FILE *fp, struct list_head *account_list,
 	}
 
 	if (url_index == -1 && username_index == -1 &&
-	    password_index == -1 && extra_index == -1 &&
-	    name_index == -1 && grouping_index == -1 &&
-	    fav_index == -1)
+		password_index == -1 && extra_index == -1 &&
+		name_index == -1 && grouping_index == -1 &&
+		fav_index == -1)
 		return 0;
 
 	first = record;

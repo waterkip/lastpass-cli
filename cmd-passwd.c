@@ -45,7 +45,7 @@
 #include "session.h"
 
 static void show_status_bar(const char *operation,
-			    unsigned int cur, unsigned int max)
+				unsigned int cur, unsigned int max)
 {
 	char progress[41] = {0};
 	size_t len;
@@ -61,15 +61,15 @@ static void show_status_bar(const char *operation,
 		memset(progress, '=', len);
 
 	terminal_fprintf(stderr, TERMINAL_FG_CYAN "%s " TERMINAL_RESET
-                     TERMINAL_FG_BLUE "[%-*s] " TERMINAL_RESET
-                     TERMINAL_FG_CYAN "%d/%d     \r" TERMINAL_RESET,
-                     operation, (int) sizeof(progress)-1, progress, cur, max);
+					 TERMINAL_FG_BLUE "[%-*s] " TERMINAL_RESET
+					 TERMINAL_FG_CYAN "%d/%d	 \r" TERMINAL_RESET,
+					 operation, (int) sizeof(progress)-1, progress, cur, max);
 }
 
 static void reencrypt(struct session *session,
-		      struct pwchange_info *info,
-		      unsigned char key[KDF_HASH_LEN],
-		      unsigned char new_key[KDF_HASH_LEN])
+				struct pwchange_info *info,
+				unsigned char key[KDF_HASH_LEN],
+				unsigned char new_key[KDF_HASH_LEN])
 {
 	struct pwchange_field *field;
 	struct pwchange_su_key *su_key;
@@ -94,7 +94,7 @@ static void reencrypt(struct session *session,
 	/* decrypt and re-encrypt RSA sharing key */
 	cipher_decrypt_private_key(info->privkey_encrypted, key, &tmp);
 	if (tmp.len != session->private_key.len ||
-	    memcmp(session->private_key.key, tmp.key, session->private_key.len)) {
+		memcmp(session->private_key.key, tmp.key, session->private_key.len)) {
 		die("Server and session private key don't match! Try lpass sync first.");
 	}
 

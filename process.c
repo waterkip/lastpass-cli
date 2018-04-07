@@ -63,16 +63,16 @@
 #define PR_SET_DUMPABLE 0
 #define PR_SET_NAME 0
 static void prctl(__attribute__((unused)) int x,
-		  __attribute__((unused)) unsigned long y) {}
+			__attribute__((unused)) unsigned long y) {}
 #endif
 
 #ifndef USE_PTRACE
 #undef PT_DENY_ATTACH
 #define PT_DENY_ATTACH 0
 static void ptrace(__attribute__((unused)) int x,
-		   __attribute__((unused)) int y,
-		   __attribute__((unused)) int z,
-		   __attribute__((unused)) int w) {}
+			__attribute__((unused)) int y,
+			__attribute__((unused)) int z,
+			__attribute__((unused)) int w) {}
 #endif
 
 
@@ -149,7 +149,7 @@ bool process_is_same_executable(pid_t pid)
 	char resolved_them[PATH_MAX + 1] = { 0 }, resolved_me[PATH_MAX + 1] = { 0 };
 
 	if (pid_to_cmd(pid, resolved_them, sizeof(resolved_them)) < 0 ||
-	    pid_to_cmd(getpid(), resolved_me, sizeof(resolved_me)) < 0)
+		pid_to_cmd(getpid(), resolved_me, sizeof(resolved_me)) < 0)
 		return false;
 
 	return strcmp(resolved_them, resolved_me) == 0;
