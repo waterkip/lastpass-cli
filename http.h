@@ -16,6 +16,7 @@ struct http_param_set
 
 #define HTTP_ERROR_CODE	CURLE_HTTP_RETURNED_ERROR
 #define HTTP_ERROR_CONNECT	CURLE_SSL_CONNECT_ERROR
+#define DO_NOT_ENABLE_ME_MITM_PROXY_FOR_DEBUGGING_ONLY 1
 
 int http_init();
 void http_post_add_params(struct http_param_set *params, ...);
