@@ -34,6 +34,7 @@
  * See LICENSE.OpenSSL for more details regarding this exception.
  */
 
+#include "agentcontrolsocket.h"
 #include "agent.h"
 #include "config.h"
 #include "util.h"
@@ -136,18 +137,11 @@ static int agent_socket_get_cred(int fd, struct ucred *cred)
 }
 #endif
 
-void _assert_socket_sun_path(struct sockaddr_un *sa, char *path)
-{
-	if (strlen(path) >= sizeof(sa->sun_path)) {
-		die("Path too large for agent control socket.");
-	}
-}
-
 int _setup_agent_socket(struct sockaddr_un *sa, char *path)
 {
 	int fd;
 
-	_assert_socket_sun_path(sa, path);
+	assert_socket_sun_path(sa, path);
 	memset(sa, 0, sizeof(*sa));
 	sa->sun_family = AF_UNIX;
 	strlcpy(sa->sun_path, path, sizeof(sa->sun_path));
@@ -160,10 +154,11 @@ static void agent_run(unsigned const char key[KDF_HASH_LEN])
 {
 	char *agent_timeout_str;
 	unsigned int agent_timeout;
-	struct sockaddr_un sa, listensa;
+	struct sockaddr_un listensa;
 	struct ucred cred;
-	int fd, listenfd;
+	int listenfd;
 	socklen_t len;
+	agentsocket agent_socket;
 
 	signal(SIGHUP, agent_cleanup);
 	signal(SIGINT, agent_cleanup);
@@ -178,20 +173,13 @@ static void agent_run(unsigned const char key[KDF_HASH_LEN])
 	if (agent_timeout)
 		alarm(agent_timeout);
 
-	_cleanup_free_ char *path = agent_socket_path();
-	fd = _setup_agent_socket(&sa, path);
+	agent_socket = agent_control_socket_setup();
 
-	unlink(path);
+	unlink(agent_socket.path);
 
-	if (bind(fd, (struct sockaddr *)&sa, SUN_LEN(&sa)) < 0 || listen(fd, 16) < 0) {
-		listenfd = errno;
-		close(fd);
-		unlink(path);
-		errno = listenfd;
-		die_errno("bind|listen");
-	}
+	agent_control_socket_bind(agent_socket);
 
-	for (len = sizeof(listensa); (listenfd = accept(fd, (struct sockaddr *)&listensa, &len)) > 0; len = sizeof(listensa)) {
+	for (len = sizeof(listensa); (listenfd = accept(agent_socket.fd, (struct sockaddr *)&listensa, &len)) > 0; len = sizeof(listensa)) {
 		if (agent_socket_get_cred(listenfd, &cred) < 0) {
 			close(listenfd);
 			continue;
@@ -210,8 +198,8 @@ static void agent_run(unsigned const char key[KDF_HASH_LEN])
 	}
 
 	listenfd = errno;
-	close(fd);
-	unlink(path);
+	close(agent_socket.fd);
+	unlink(agent_socket.path);
 	errno = listenfd;
 	die_errno("accept");
 }
