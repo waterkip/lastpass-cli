@@ -1,7 +1,18 @@
 # LastPass CLI
+
+This is a fork of the LogMeIn Lastpass CLI client.
+
 #### (c) 2014-2019 LastPass.
 
+#### (c) 2020-present Contributers.
+
 Command line interface to [LastPass.com](https://lastpass.com/).
+
+## Why the fork?
+
+The fork is here because it seems LogMeIn does not actively develops the code
+anymore and we as a community still wants the tool to be useful. If LogMeIn
+decides it wants to continue work on their CLI client I'm happy to fork back.
 
 ## Operating System Support
 
